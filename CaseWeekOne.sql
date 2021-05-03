@@ -13,7 +13,7 @@
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 
- 1. What is the total amount each customer spent at the restaurant?
+-- 1. What is the total amount each customer spent at the restaurant?
 Select
 customer_id AS Customer
 ,SUM(price) AS Total
@@ -22,14 +22,14 @@ JOIN menu AS m
 	ON s.product_id = m.product_id
 GROUP BY customer_id
 
- 2. How many days has each customer visited the restaurant?
+-- 2. How many days has each customer visited the restaurant?
 Select
 customer_id AS Customer,
 COUNT(distinct order_date) AS VisitedDays
 FROM sales AS s
 GROUP BY customer_id
 
- 3. What was the first item from the menu purchased by each customer?
+-- 3. What was the first item from the menu purchased by each customer?
 WITH minDate AS
 (
   SELECT 
@@ -46,7 +46,7 @@ INNER JOIN minDate AS mD
 	ON mD.Customer = s.customer_id
     AND mD.Date = s.order_date 
 
- 4. What is the most purchased item on the menu and how many times was it purchased by all customers? CHECK
+-- 4. What is the most purchased item on the menu and how many times was it purchased by all customers? CHECK
 SELECT product_name, COUNT(*) 
 FROM sales AS s
 INNER JOIN menu AS m
@@ -55,7 +55,7 @@ GROUP BY product_name
 ORDER BY COUNT(*) DESC
 LIMIT 1
 
- 5. Which item was the most popular for each customer? CHECK but without ties
+-- 5. Which item was the most popular for each customer? CHECK but without ties
 WITH popularProduct AS
 (
 SELECT customer_id
@@ -73,7 +73,7 @@ INNER JOIN menu AS m
 WHERE r_id = 1
 
 
- 6. Which item was purchased first by the customer after they became a member? Depends on when exactly? Did he buy on this day before he became a member? CHECK
+-- 6. Which item was purchased first by the customer after they became a member? Depends on when exactly? Did he buy on this day before he became a member? CHECK
 WITH purchasesAfterMember AS
 (
 SELECT 
@@ -93,7 +93,7 @@ INNER JOIN menu AS m
 WHERE row_number = 1
 
 
- 7. Which item was purchased just before the customer became a member? CHECK
+-- 7. Which item was purchased just before the customer became a member? CHECK
 WITH purchaseBeforeMember AS
 (
 SELECT
@@ -114,7 +114,7 @@ INNER JOIN menu AS m
 WHERE p2.row_number IS NULL
 
 
- 8. What is the total items and amount spent for each member before they became a member? CHECK
+-- 8. What is the total items and amount spent for each member before they became a member? CHECK
 SELECT
 s.customer_id
 ,COUNT(*) AS totalItems
@@ -127,7 +127,7 @@ INNER JOIN menu AS m
 GROUP BY s.customer_id
 
 
- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have? CHECK
+-- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have? CHECK
 WITH perCustomerPoints AS
 (
 WITH perItemCustomer AS
@@ -156,7 +156,7 @@ FROM perCustomerPoints
 GROUP BY customer_id
 
 
- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January? CHECK
+-- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January? CHECK
   
 WITH pointsPerPurchase AS
 (
